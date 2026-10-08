@@ -909,12 +909,10 @@
                     <span class="text-xl font-bold text-gray-800">${player.name}</span>
                     ${isDrawer ? '<span class="bg-amber-400 text-white text-xs px-2 py-0.5 rounded-full font-bold">출제자</span>' : ''}
                 </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-xl font-bold text-blue-600 mr-2" id="score-val-${idx}">${player.score}점</span>
-                    <button onclick="changeScore(${idx}, 10)" class="btn-bubbly bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-lg text-sm font-bold">+10</button>
-                    <button onclick="changeScore(${idx}, 5)" class="btn-bubbly bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1 rounded-lg text-sm font-bold">+5</button>
-                    <button onclick="changeScore(${idx}, 1)" class="btn-bubbly bg-sky-400 hover:bg-sky-500 text-white px-2 py-1 rounded-lg text-sm font-bold">+1</button>
-                    <button onclick="changeScore(${idx}, -1)" class="btn-bubbly bg-gray-300 hover:bg-gray-400 text-gray-700 px-2 py-1 rounded-lg text-sm font-bold">-1</button>
+                <div class="flex items-center gap-2">
+                    <button onclick="changeScore(${idx}, -1)" class="btn-bubbly bg-red-500 hover:bg-red-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xl sm:text-2xl font-bold flex items-center justify-center leading-none shadow-sm pb-1">-</button>
+                    <span class="text-xl sm:text-2xl font-bold text-blue-600 w-12 sm:w-16 text-center" id="score-val-${idx}">${player.score}점</span>
+                    <button onclick="changeScore(${idx}, 1)" class="btn-bubbly bg-blue-500 hover:bg-blue-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xl sm:text-2xl font-bold flex items-center justify-center leading-none shadow-sm pb-1">+</button>
                 </div>
             `;
             container.appendChild(card);

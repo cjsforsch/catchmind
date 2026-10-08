@@ -13,10 +13,10 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            overflow: hidden; /* 태블릿에서 스크롤 방지 */
+            overflow: hidden; /* 태블릿 및 모바일에서 화면 전체 스크롤 방지 */
         }
         
-        /* 캔버스 드로잉 중 화면 밀림 방지 */
+        /* 캔버스 드로잉 중 터치 이벤트를 이중 처리하지 않도록 설정 */
         #drawing-canvas {
             touch-action: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -26,7 +26,7 @@
         }
 
         .btn-bubbly {
-            transition: transform 0.1s;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
         .btn-bubbly:active {
             transform: scale(0.95);
@@ -34,14 +34,14 @@
 
         /* 색상 팔레트 선택 효과 */
         .color-btn.selected {
-            border: 4px solid #333;
-            transform: scale(1.1);
+            border: 4px solid #1e293b;
+            transform: scale(1.15);
         }
 
         /* 굵기 선택 효과 */
         .size-btn.selected {
             background-color: #cbd5e1;
-            border: 2px solid #333;
+            border: 2px solid #1e293b;
         }
 
         /* 룰렛 애니메이션 텍스트 */
@@ -50,22 +50,40 @@
         }
         @keyframes pop {
             0% { transform: scale(1); }
-            100% { transform: scale(1.1); color: #f59e0b; }
+            100% { transform: scale(1.15); color: #f59e0b; }
         }
         
         .screen { display: none; }
         .screen.active { display: flex; }
+
+        /* 커스텀 스크롤바 디자인 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
-<body class="w-screen h-screen flex flex-col">
+<body class="w-screen h-[100dvh] flex flex-col justify-between overflow-hidden">
 
-<div id="screen-setup" class="screen active flex-col items-center justify-center w-full h-full p-4">
-    <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-2xl border-4 border-blue-200">
-        <h1 class="text-5xl text-center text-blue-500 mb-6 drop-shadow-md">🎨 우리반 캐치마인드 ✏️</h1>
+<!-- 게임 설정 화면 -->
+<div id="screen-setup" class="screen active flex-col items-center justify-center w-full h-full p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-2xl border-4 border-blue-200 my-auto max-h-[95dvh] overflow-y-auto">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl text-center text-blue-500 mb-4 sm:mb-6 drop-shadow-md">🎨 우리반 캐치마인드 ✏️</h1>
         
         <!-- 그림 그리는 시간 선택 -->
         <div class="mb-6">
-            <h2 class="text-2xl mb-2 text-gray-700">⏱️ 그림 그리는 시간 선택</h2>
+            <h2 class="text-2xl mb-2 text-gray-700 font-bold">⏱️ 그림 그리는 시간 선택</h2>
             <div class="flex flex-wrap items-center justify-center gap-3">
                 <div class="flex gap-2">
                     <button class="time-btn btn-bubbly bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xl border-2 border-transparent" data-time="30">30초</button>
@@ -82,194 +100,216 @@
             </div>
         </div>
 
-        <!-- 제시어 카테고리 선택 (단일 통합) -->
+        <!-- 제시어 카테고리 선택 -->
         <div class="mb-6">
-            <h2 class="text-2xl mb-2 text-gray-700">🎨 제시어 카테고리 선택 (다중 선택 가능)</h2>
+            <h2 class="text-2xl mb-2 text-gray-700 font-bold">🎨 제시어 카테고리 선택 (다중 선택 가능)</h2>
             <div class="flex flex-wrap gap-2 justify-center" id="category-options">
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '동물/생물')">🐶 동물/생물</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '음식/디저트')">🍕 음식/디저트</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '학교/교과')">🏫 학교/교과</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '💡 넌센스/말장난')">💡 넌센스/말장난</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '캐릭터/문화')">🎬 캐릭터/문화</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '스포츠/놀이')">⚽ 스포츠/놀이</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '물건/일상')">🏠 물건/일상</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '장소/자연/우주')">🌍 장소/자연/우주</button>
-                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '직업/사람')">💼 직업/사람</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '동물/생물')">🐶 동물/생물</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '음식/디저트')">🍕 음식/디저트</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '학교/교과')">🏫 학교/교과</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '💡 넌센스/말장난')">💡 넌센스/말장난</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '캐릭터/문화')">🎬 캐릭터/문화</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '스포츠/놀이')">⚽ 스포츠/놀이</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '물건/일상')">🏠 물건/일상</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '장소/자연/우주')">🌍 장소/자연/우주</button>
+                <button class="cat-btn btn-bubbly bg-purple-100 text-purple-700 px-3 py-1.5 rounded-full text-base md:text-lg border-2 border-purple-400 font-bold" onclick="toggleCategory(this, '직업/사람')">💼 직업/사람</button>
             </div>
         </div>
 
+        <!-- 참가자 명단 -->
         <div class="mb-6">
-            <h2 class="text-2xl mb-2 text-gray-700">참가자 명단 (최소 2명)</h2>
-            <div class="flex gap-2 mb-4">
-                <input type="text" id="player-input" placeholder="학생 이름 입력" class="flex-1 text-2xl p-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-400" onkeypress="if(event.key === 'Enter') addPlayer()">
-                <button onclick="addPlayer()" class="btn-bubbly bg-green-400 text-white px-6 py-3 rounded-xl text-2xl shadow-md">추가</button>
+            <h2 class="text-2xl mb-2 text-gray-700 font-bold">👥 참가자 명단 (최소 2명)</h2>
+            <div class="flex gap-2 mb-3">
+                <input type="text" id="player-input" placeholder="학생 이름 입력" class="flex-1 text-xl p-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-blue-400" onkeypress="if(event.key === 'Enter') addPlayer()">
+                <button onclick="addPlayer()" class="btn-bubbly bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl text-xl font-bold shadow-md">추가</button>
             </div>
-            <div id="player-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-gray-50 rounded-xl min-h-[4rem]">
+            <div id="player-list" class="flex flex-wrap gap-2 max-h-36 overflow-y-auto p-3 bg-gray-50 rounded-xl min-h-[4rem] border border-gray-200">
                 <!-- 플레이어 뱃지 생성 위치 -->
             </div>
         </div>
 
-        <button onclick="startGame()" class="btn-bubbly w-full bg-blue-500 hover:bg-blue-600 text-white text-3xl py-4 rounded-2xl shadow-lg mt-4">
+        <button onclick="startGame()" class="btn-bubbly w-full bg-blue-500 hover:bg-blue-600 text-white text-3xl font-bold py-4 rounded-2xl shadow-lg transition">
             🚀 게임 시작!
         </button>
     </div>
 </div>
 
+<!-- 출제자 뽑기 화면 -->
 <div id="screen-picker" class="screen flex-col items-center justify-center w-full h-full p-4 bg-yellow-50">
-    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-xl text-center border-4 border-yellow-300">
-        <h2 class="text-3xl text-gray-500 mb-4">다음 출제자를 뽑는 중...</h2>
-        <div id="roulette-box" class="text-6xl text-blue-600 font-bold my-10 h-20 flex items-center justify-center">
+    <div class="bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-xl text-center border-4 border-yellow-300 my-auto max-h-[95dvh] overflow-y-auto">
+        <h2 class="text-2xl sm:text-3xl text-gray-500 mb-2 font-bold">다음 출제자를 뽑는 중...</h2>
+        <div id="roulette-box" class="text-4xl sm:text-5xl md:text-6xl text-blue-600 font-bold my-6 sm:my-8 h-20 flex items-center justify-center">
             ???
         </div>
         
-        <div id="word-reveal-box" class="hidden flex-col items-center mt-6">
-            <p class="text-xl text-red-500 mb-2">⚠️ 다른 사람들은 눈을 감거나 고개를 돌리세요!</p>
-            <button onclick="showWord()" class="btn-bubbly bg-indigo-500 text-white px-8 py-4 text-2xl rounded-xl shadow-md mb-4">
+        <div id="word-reveal-box" class="hidden flex-col items-center mt-4">
+            <p class="text-lg sm:text-xl text-red-500 font-bold mb-4 animate-bounce break-keep">⚠️ 다른 사람들은 눈을 감거나 고개를 돌리세요!</p>
+            <button onclick="showWord()" class="btn-bubbly bg-indigo-500 hover:bg-indigo-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-xl sm:text-2xl font-bold rounded-xl shadow-md mb-4 shrink-0">
                 제시어 확인하기 🙈
             </button>
             
-            <div id="the-word" class="hidden text-5xl font-bold text-green-600 my-6 bg-green-100 px-8 py-4 rounded-2xl border-2 border-green-400">
+            <div id="the-word" class="hidden text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 my-4 bg-green-100 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-green-400">
                 <!-- 제시어 표시 -->
             </div>
             
-            <button id="btn-start-draw" onclick="enterDrawMode()" class="hidden btn-bubbly bg-pink-500 text-white px-8 py-4 text-3xl rounded-xl shadow-md w-full">
+            <button id="btn-start-draw" onclick="enterDrawMode()" class="hidden btn-bubbly bg-pink-500 hover:bg-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-2xl sm:text-3xl font-bold rounded-xl shadow-md w-full mt-2 shrink-0">
                 그림 그리기 시작! 🎨
             </button>
         </div>
     </div>
 </div>
 
-<div id="screen-draw" class="screen flex-col w-full h-full p-2 bg-gray-100">
-    <!-- 상단 바 -->
-    <div class="flex justify-between items-center bg-white p-3 rounded-2xl shadow-sm mb-2">
-        <div class="text-2xl text-blue-600 font-bold flex items-center gap-2">
-            <span>출제:</span>
-            <span id="draw-current-player" class="bg-blue-100 px-3 py-1 rounded-lg"></span>
+<!-- 그림 그리기 화면 -->
+<div id="screen-draw" class="screen flex-col w-full h-full p-1 sm:p-2 bg-gray-100 justify-between">
+    <!-- 상단 상태 바 -->
+    <div class="flex justify-between items-center bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-md mb-1 sm:mb-2 shrink-0">
+        <div class="text-base sm:text-xl md:text-2xl text-blue-600 font-bold flex items-center gap-1 sm:gap-2">
+            <span class="hidden sm:inline">출제:</span>
+            <span id="draw-current-player" class="bg-blue-100 text-blue-800 px-2 sm:px-3 py-1 rounded-lg"></span>
         </div>
-        <div class="text-3xl font-bold text-red-500 flex items-center gap-2">
-            ⏳ <span id="timer-display">60</span>
+        <div class="text-xl sm:text-2xl md:text-3xl font-bold text-red-500 flex items-center gap-1 sm:gap-2">
+            ⏳ <span id="timer-display" class="w-8 sm:w-12 text-center">60</span><span class="hidden sm:inline">초</span>
         </div>
-        <div class="text-2xl text-green-600 font-bold flex items-center gap-2">
-            <span>제시어:</span>
-            <span id="draw-current-word" class="bg-green-100 px-4 py-1 rounded-lg tracking-widest text-3xl"></span>
+        <div class="text-base sm:text-xl md:text-2xl text-green-600 font-bold flex items-center gap-1 sm:gap-2">
+            <span class="hidden sm:inline">제시어:</span>
+            <div class="relative group">
+                <span id="draw-current-word" class="bg-green-100 text-green-800 px-2 sm:px-4 py-1 rounded-lg tracking-widest font-bold"></span>
+            </div>
         </div>
     </div>
 
     <!-- 캔버스 영역 -->
-    <div class="flex-1 w-full relative mb-2" id="canvas-container">
-        <canvas id="drawing-canvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+    <div class="flex-1 w-full relative mb-1 sm:mb-2 min-h-0" id="canvas-container">
+        <canvas id="drawing-canvas" class="absolute top-0 left-0 w-full h-full border-2 border-gray-300"></canvas>
     </div>
 
-    <!-- 도구 바 -->
-    <div class="flex flex-wrap md:flex-nowrap justify-between items-center bg-white p-3 rounded-2xl shadow-sm gap-3">
+    <!-- 하단 도구 바 -->
+    <div class="flex flex-wrap md:flex-nowrap justify-between items-center bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-md gap-1.5 sm:gap-3 shrink-0">
         <!-- 색상 팔레트 영역 -->
-        <div class="flex flex-wrap items-center gap-2">
-            <div class="flex flex-wrap items-center gap-1.5 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-black selected" data-color="#000000" title="검정"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-gray-500" data-color="#6B7280" title="회색"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-red-500" data-color="#EF4444" title="빨강"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-orange-500" data-color="#F97316" title="주황"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-yellow-400" data-color="#FACC15" title="노랑"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-lime-500" data-color="#84CC16" title="연두"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-green-600" data-color="#16A34A" title="초록"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-sky-400" data-color="#38BDF8" title="하늘"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-blue-600" data-color="#2563EB" title="파랑"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-purple-600" data-color="#9333EA" title="보라"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-pink-400" data-color="#F472B6" title="분홍"></button>
-                <button class="color-btn btn-bubbly w-8 h-8 rounded-full bg-amber-800" data-color="#92400E" title="갈색"></button>
+        <div class="flex flex-wrap items-center gap-1 sm:gap-2">
+            <div class="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-gray-50 p-1 sm:p-2 rounded-xl border border-gray-200">
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-black selected" data-color="#000000" title="검정"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-500" data-color="#6B7280" title="회색"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-red-500" data-color="#EF4444" title="빨강"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-orange-500" data-color="#F97316" title="주황"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-yellow-400" data-color="#FACC15" title="노랑"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-lime-500" data-color="#84CC16" title="연두"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-600" data-color="#16A34A" title="초록"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-sky-400" data-color="#38BDF8" title="하늘"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-600" data-color="#2563EB" title="파랑"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-600" data-color="#9333EA" title="보라"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-pink-400" data-color="#F472B6" title="분홍"></button>
+                <button class="color-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-amber-800" data-color="#92400E" title="갈색"></button>
                 
                 <!-- 커스텀 컬러 피커 -->
-                <div id="custom-color-container" class="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer shadow-sm hover:scale-105 transition-transform bg-gradient-to-tr from-red-500 via-green-500 to-blue-500" title="색상 직접 선택">
+                <div id="custom-color-container" class="relative flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 cursor-pointer shadow-sm hover:scale-105 transition-transform bg-gradient-to-tr from-red-500 via-green-500 to-blue-500" title="색상 직접 선택">
                     <input type="color" id="custom-color-picker" value="#000000" class="absolute inset-0 w-full h-full cursor-pointer opacity-0 z-10">
-                    <span class="text-xs text-white drop-shadow pointer-events-none z-0">🎨</span>
+                    <span class="text-[10px] sm:text-xs text-white drop-shadow pointer-events-none z-0">🎨</span>
                 </div>
             </div>
 
             <!-- 지우개 -->
-            <button class="color-btn btn-bubbly px-3 py-1.5 rounded-xl bg-white border-2 border-gray-300 flex items-center gap-1 text-sm font-bold text-gray-700 shadow-sm" data-color="#FFFFFF">
+            <button id="eraser-btn" class="color-btn btn-bubbly px-2 sm:px-3 py-1 sm:py-2 rounded-xl bg-white border-2 border-gray-300 flex items-center gap-1 text-xs sm:text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50" data-color="#FFFFFF">
                 🧹 지우개
             </button>
         </div>
         
         <!-- 획 크기 & 작업 도구 영역 -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 sm:gap-3 w-full md:w-auto justify-between md:justify-end mt-1 md:mt-0">
             <!-- 획 크기 선택 -->
-            <div class="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
-                <span class="text-xs font-bold text-gray-500">굵기</span>
-                <div class="flex items-center gap-1">
-                    <button class="size-btn btn-bubbly w-8 h-8 rounded-full flex justify-center items-center" data-size="2" title="매우 가늘게"><div class="w-1 h-1 bg-black rounded-full"></div></button>
-                    <button class="size-btn btn-bubbly w-8 h-8 rounded-full flex justify-center items-center" data-size="5" title="가늘게"><div class="w-1.5 h-1.5 bg-black rounded-full"></div></button>
-                    <button class="size-btn btn-bubbly w-8 h-8 rounded-full flex justify-center items-center selected" data-size="10" title="보통"><div class="w-2.5 h-2.5 bg-black rounded-full"></div></button>
-                    <button class="size-btn btn-bubbly w-8 h-8 rounded-full flex justify-center items-center" data-size="20" title="굵게"><div class="w-4 h-4 bg-black rounded-full"></div></button>
-                    <button class="size-btn btn-bubbly w-8 h-8 rounded-full flex justify-center items-center" data-size="35" title="매우 굵게"><div class="w-6 h-6 bg-black rounded-full"></div></button>
+            <div class="flex items-center gap-1 sm:gap-2 bg-gray-50 p-1 sm:p-2 rounded-xl border border-gray-200">
+                <span class="hidden sm:inline text-xs font-bold text-gray-500">굵기</span>
+                <div class="flex items-center gap-0.5 sm:gap-1">
+                    <button class="size-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full flex justify-center items-center" data-size="2" title="매우 가늘게"><div class="w-1 h-1 bg-black rounded-full"></div></button>
+                    <button class="size-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full flex justify-center items-center" data-size="5" title="가늘게"><div class="w-1.5 h-1.5 bg-black rounded-full"></div></button>
+                    <button class="size-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full flex justify-center items-center selected" data-size="10" title="보통"><div class="w-2.5 h-2.5 bg-black rounded-full"></div></button>
+                    <button class="size-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full flex justify-center items-center" data-size="20" title="굵게"><div class="w-4 h-4 bg-black rounded-full"></div></button>
+                    <button class="size-btn btn-bubbly w-6 h-6 sm:w-8 sm:h-8 rounded-full flex justify-center items-center" data-size="35" title="매우 굵게"><div class="w-6 h-6 bg-black rounded-full"></div></button>
                 </div>
                 <!-- 슬라이더 미세 조절 -->
-                <input type="range" id="brush-slider" min="1" max="50" value="10" class="w-20 accent-blue-500 cursor-pointer" title="미세 굵기 조절">
-                <span id="brush-size-text" class="text-xs font-bold text-blue-600 w-5 text-center">10</span>
+                <input type="range" id="brush-slider" min="1" max="50" value="10" class="w-16 sm:w-20 accent-blue-500 cursor-pointer" title="미세 굵기 조절">
             </div>
 
-            <button onclick="clearCanvas()" class="btn-bubbly bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-xl text-base font-bold whitespace-nowrap">전체 지우기</button>
-            <button onclick="finishDrawing()" class="btn-bubbly bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl text-lg font-bold whitespace-nowrap">완료 / 포기</button>
+            <div class="flex gap-1 sm:gap-2">
+                <button onclick="clearCanvas()" class="btn-bubbly bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 sm:px-3 py-1 sm:py-2 rounded-xl text-xs sm:text-base font-bold whitespace-nowrap shadow-sm">전체 지우기</button>
+                <button onclick="finishDrawing()" class="btn-bubbly bg-red-500 hover:bg-red-600 text-white px-3 sm:px-5 py-1 sm:py-2 rounded-xl text-sm sm:text-lg font-bold whitespace-nowrap shadow-md">완료 / 포기</button>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- 그림 제시 및 정답 맞히기 화면 -->
 <div id="screen-guess" class="screen flex-col items-center justify-center w-full h-full p-4 bg-orange-50">
-    <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-4xl border-4 border-orange-300 flex flex-col items-center">
-        <h2 class="text-4xl text-gray-700 mb-2 text-center break-keep">🎨 다 같이 그림을 보고 정답을 맞춰보세요!</h2>
-        <p class="text-xl text-orange-500 mb-6">출제자는 아직 정답을 말하지 마세요 🤫</p>
+    <div class="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-4xl border-4 border-orange-300 flex flex-col items-center my-auto max-h-[95dvh] overflow-y-auto">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl text-gray-700 mb-1 text-center font-bold break-keep">🎨 다 같이 그림을 보고 정답을 맞춰보세요!</h2>
+        <p class="text-base sm:text-lg md:text-xl text-orange-500 mb-4 font-bold">출제자는 아직 정답을 말하지 마세요 🤫</p>
         
-        <div class="w-full bg-white rounded-xl mb-8 flex justify-center items-center overflow-hidden border-2 border-gray-200 shadow-inner" style="height: 50vh;">
-            <img id="final-drawing-img" class="max-w-full max-h-full object-contain pointer-events-none" alt="완성된 그림" />
+        <div class="w-full bg-white rounded-2xl mb-4 sm:mb-6 flex justify-center items-center overflow-hidden border-2 border-gray-200 shadow-inner min-h-[150px] max-h-[45vh]">
+            <img id="final-drawing-img" class="max-w-full max-h-[45vh] object-contain pointer-events-none" alt="완성된 그림" />
         </div>
         
-        <button onclick="revealAnswer()" class="btn-bubbly w-full max-w-md bg-red-500 hover:bg-red-600 text-white px-8 py-5 rounded-2xl text-3xl shadow-lg font-bold">
+        <button onclick="revealAnswer()" class="btn-bubbly w-full max-w-md bg-red-500 hover:bg-red-600 text-white px-4 sm:px-8 py-3 sm:py-4 rounded-2xl text-xl sm:text-2xl md:text-3xl shadow-lg font-bold transition shrink-0">
             정답 공개 및 점수 주기 🎯
         </button>
     </div>
 </div>
 
-<div id="screen-score" class="screen flex-col items-center justify-center w-full h-full p-4 bg-green-50">
-    <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-3xl border-4 border-green-300">
-        <h2 class="text-3xl text-center text-gray-700 mb-2">시간 종료! 정답은?</h2>
-        <div class="text-6xl text-center font-bold text-red-500 mb-8 tracking-widest bg-red-100 py-4 rounded-xl" id="score-answer">
+<!-- 정답 및 점수 부여 화면 -->
+<div id="screen-score" class="screen flex-col items-center justify-center w-full h-full p-4 bg-green-50 overflow-y-auto">
+    <div class="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-3xl border-4 border-green-300 my-auto max-h-[95dvh] flex flex-col">
+        <h2 class="text-xl sm:text-2xl md:text-3xl text-center text-gray-700 mb-2 font-bold shrink-0">시간 종료! 정답은?</h2>
+        <div class="text-3xl sm:text-4xl md:text-6xl text-center font-bold text-red-500 mb-4 sm:mb-6 tracking-widest bg-red-100 py-2 sm:py-4 rounded-2xl border-2 border-red-300 shadow-inner shrink-0" id="score-answer">
             <!-- 정답 표시 -->
         </div>
 
-        <h3 class="text-2xl text-center text-blue-600 mb-4 bg-blue-50 py-2 rounded-lg">
+        <h3 class="text-lg sm:text-xl md:text-2xl text-center text-blue-600 mb-4 bg-blue-50 py-2 rounded-xl font-bold shrink-0">
             🧑‍🏫 정답을 맞힌 학생과 출제자에게 점수를 주세요!
         </h3>
         
-        <div id="score-list" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8 max-h-[40vh] overflow-y-auto p-4 bg-gray-50 rounded-2xl border-2 border-gray-200">
+        <div id="score-list" class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6 overflow-y-auto p-2 sm:p-3 bg-gray-50 rounded-2xl border-2 border-gray-200 flex-1">
             <!-- 점수 입력 리스트가 동적으로 생성됨 -->
         </div>
 
-        <div class="flex gap-4">
-            <button onclick="showLeaderboard()" class="flex-1 btn-bubbly bg-indigo-500 text-white text-2xl py-4 rounded-2xl shadow-md">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 shrink-0">
+            <button onclick="showLeaderboard()" class="flex-1 btn-bubbly bg-indigo-500 hover:bg-indigo-600 text-white text-lg sm:text-xl md:text-2xl font-bold py-3 rounded-2xl shadow-md">
                 🏆 현재 순위 보기
             </button>
-            <button onclick="startNextRound()" class="flex-1 btn-bubbly bg-green-500 text-white text-2xl py-4 rounded-2xl shadow-md">
+            <button onclick="startNextRound()" class="flex-1 btn-bubbly bg-green-500 hover:bg-green-600 text-white text-lg sm:text-xl md:text-2xl font-bold py-3 rounded-2xl shadow-md">
                 다음 출제자 뽑기 ➡️
             </button>
         </div>
     </div>
 </div>
 
+<!-- 명예의 전당 화면 -->
 <div id="screen-leaderboard" class="screen flex-col items-center justify-center w-full h-full p-4 bg-purple-50">
-    <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-xl border-4 border-purple-300 flex flex-col max-h-[90vh]">
-        <h2 class="text-4xl text-center text-purple-600 mb-6 drop-shadow-sm">🏆 명예의 전당 🏆</h2>
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-xl border-4 border-purple-300 flex flex-col my-auto max-h-[95dvh]">
+        <h2 class="text-3xl md:text-4xl text-center text-purple-600 mb-4 font-bold drop-shadow-sm shrink-0">🏆 명예의 전당 🏆</h2>
         
-        <div id="leaderboard-list" class="flex-1 overflow-y-auto flex flex-col gap-3 mb-6 p-2">
+        <div id="leaderboard-list" class="flex-1 overflow-y-auto flex flex-col gap-3 mb-6 p-2 min-h-[150px]">
             <!-- 순위 목록 -->
         </div>
 
-        <div class="flex gap-4">
-            <button onclick="backToScore()" id="btn-back-to-score" class="flex-1 btn-bubbly bg-gray-400 text-white text-2xl py-3 rounded-2xl shadow-md">
+        <div class="flex gap-3 shrink-0">
+            <button onclick="backToScore()" id="btn-back-to-score" class="flex-1 btn-bubbly bg-gray-400 hover:bg-gray-500 text-white text-xl md:text-2xl font-bold py-3 rounded-2xl shadow-md">
                 돌아가기
             </button>
-            <button onclick="confirmEndGame()" class="flex-1 btn-bubbly bg-red-500 text-white text-2xl py-3 rounded-2xl shadow-md">
-                게임 완전히 끝내기
+            <button onclick="confirmEndGame()" class="flex-1 btn-bubbly bg-red-500 hover:bg-red-600 text-white text-xl md:text-2xl font-bold py-3 rounded-2xl shadow-md">
+                게임 종료
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- alert/confirm 대체용 커스텀 모달 -->
+<div id="custom-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl max-w-md w-full border-4 border-blue-300 text-center transform transition-all scale-100">
+        <div id="modal-icon" class="text-5xl mb-3">🔔</div>
+        <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2">알림</h3>
+        <p id="modal-message" class="text-lg text-gray-600 mb-6 break-keep">내용</p>
+        <div id="modal-buttons" class="flex justify-center gap-3">
+            <button id="modal-btn-confirm" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold text-lg shadow-md">확인</button>
+            <button id="modal-btn-cancel" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2.5 rounded-xl font-bold text-lg shadow-md hidden">취소</button>
         </div>
     </div>
 </div>
@@ -290,14 +330,82 @@
     let canvas, ctx;
     let isDrawing = false;
     let currentColor = '#000000';
-    let currentLineWidth = 8;
+    let currentLineWidth = 10;
     let lastX = 0;
     let lastY = 0;
 
     // 제시어 카테고리 상태
     let selectedCategories = ['동물/생물', '음식/디저트', '학교/교과', '💡 넌센스/말장난', '캐릭터/문화', '스포츠/놀이', '물건/일상', '장소/자연/우주', '직업/사람'];
 
-    // 제시어 데이터베이스 (카테고리별 분류 - 대폭 확장 및 다양화)
+    // Web Audio API 사운드 생성기 (외부 리소스 의존 없음)
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new AudioCtx();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function playSound(type) {
+        try {
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'tick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'pop') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'fanfare') {
+                // 승리/공개 효과음
+                const notes = [261.63, 329.63, 392.00, 523.25];
+                notes.forEach((freq, idx) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    g.gain.setValueAtTime(0.15, now + idx * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.25);
+                    o.start(now + idx * 0.1);
+                    o.stop(now + idx * 0.1 + 0.25);
+                });
+            } else if (type === 'alarm') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.linearRampToValueAtTime(400, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        } catch (e) {
+            // 사운드 재생 불가 환경 예외 처리
+        }
+    }
+
+    // 제시어 데이터베이스 (카테고리별 대량 수록)
     const wordDB = {
         '동물/생물': [
             '호랑이', '사자', '코끼리', '기린', '원숭이', '강아지', '고양이', '토끼', '돼지', '소', 
@@ -306,9 +414,8 @@
             '문어', '오징어', '꽃게', '카피바라', '수달', '카멜레온', '티라노사우루스', '플라밍고', '햄스터', '타조', 
             '해파리', '도마뱀', '가오리', '사막여우', '펠리컨', '알파카', '고슴도치', '장수풍뎅이', '사슴벌레', '부엉이', 
             '바다표범', '북극곰', '아홀로틀', '치타', '캥거루', '하마', '코뿔소', '얼룩말', '너구리', '판다', 
-            '레서판다', '나무늘보', '두더지', '미어캣', '늑대', '여우', '트리케라톱스', '프테라노돈', '공작', '조개', 
-            '해마', '킹크랩', '모기', '매미', '잠자리', '무당벌레', '전갈', '지렁이', '족제비', '비버', 
-            '바다코끼리', '물개', '앵무새', '갈매기', '딱따구리', '올빼미', '제비', '수리부엉이', '도롱뇽', '표범'
+            '레서판다', '나무늘보', '두더지', '미어캣', '늑대', '여우', '공작', '조개', 
+            '해마', '킹크랩', '모기', '매미', '잠자리', '무당벌레', '전갈', '지렁이', '족제비', '비버'
         ],
         '음식/디저트': [
             '사과', '바나나', '포도', '딸기', '수박', '귤', '복숭아', '파인애플', '토마토', '감자', 
@@ -316,86 +423,107 @@
             '초콜릿', '사탕', '아이스크림', '케이크', '탕후루', '마라탕', '민트초코', '크로플', '버블티', '소금빵', 
             '마카롱', '핫도그', '삼겹살', '타코야끼', '붕어빵', '계란빵', '오므라이스', '파스타', '시리얼', '샤인머스캣', 
             '솜사탕', '호떡', '팥빙수', '감자튀김', '만두', '약과', '마시멜로', '시카고피자', '치즈스틱', '순대', 
-            '어묵', '짬뽕', '우동', '샌드위치', '토스트', '크루아상', '에그타르트', '푸딩', '젤리', '팝콘', 
-            '나초', '타코', '스테이크', '족발', '보쌈', '계란말이', '미역국', '김치찌개', '된장찌개', '비빔밥', 
-            '볶음밥', '카레', '오코노미야끼', '쌀국수', '초밥', '삼각김밥', '핫바', '소세지', '닭꼬치', '츄러스', 
-            '도넛', '와플', '케밥', '수제비', '칼국수', '콩국수', '냉면', '떡국', '만두국', '비빔국수'
+            '어묵', '짬뽕', '우동', '샌드위치', '토스트', '크루아상', '에그타르트', '푸딩', '젤리', '팝콘'
         ],
         '학교/교과': [
             '삼각자', '분도기', '리코더', '현미경', '지구본', '실로폰', '돋보기', '급식표', '책상', '보드마카', 
             '알림장', '현장학습', '체육대회', '단소', '소반', '나침반', '강당', '청소도구', '실내화', '운동장', 
-            '주번', '칠판지우개', '실험관', '해부도', '광합성', '먹이사슬', '지진계', '수평대', '각도기', '전자저울', 
-            '시험지', '교과서', '생활통지표', '칠판', '분필', '연필', '지우개', '필통', '샤프', '볼펜', 
+            '주번', '칠판지우개', '실험관', '해부도', '광합성', '먹이사슬', '지진계', '각도기', '전자저울', 
+            '시험지', '교과서', '칠판', '분필', '연필', '지우개', '필통', '샤프', '볼펜', 
             '형광펜', '자', '딱풀', '가위', '색종이', '스케치북', '크레파스', '물감', '붓', '오카리나', 
-            '소고', '장구', '꽹과리', '보건실', '도서관', '과학실', '미술실', '음악실', '방송실', '교무실', 
-            '행정실', '급식실', '식판', '수저통', '체육복', '조회대', '철봉', '정글짐', '미끄럼틀', '시소', 
-            '학급회의', '수련회', '졸업식', '입학식', '체험학습', '표창장', '상장', '학생증', '시간표', '단원평가'
+            '소고', '장구', '꽹과리', '보건실', '도서관', '과학실', '미술실', '음악실', '급식실', '체육복'
         ],
         '💡 넌센스/말장난': [
             '사과나무', '눈사람', '오리발', '불고기', '꽃다발', '징검다리', '손전등', '촛불', '비행기', '달걀후라이', 
             '바람개비', '무지개', '모래시계', '해바라기', '손목시계', '붕어빵', '감자칩', '발자국', '파도타기', '파리채', 
             '신발장', '돌고래', '밤하늘', '달팽이', '칼국수', '호랑나비', '고추잠자리', '손가락', '왕관', '소나무', 
-            '뱀다리', '개구쟁이', '신호등', '바위섬', '물소리', '쥐구멍', '알사탕', '벼락치기', '눈꺼풀', '달빛', 
-            '바람막이', '물고기', '불꽃놀이', '팽이치기', '깡통', '닭살', '소머리국밥', '칼싸움', '가위바위보', '밥도둑', 
-            '신발끈', '소방차', '구급차', '경찰차', '물총', '눈싸움', '해돋이', '달맞이', '모래성', '돌탑', 
-            '쥐불놀이', '꽃길', '비행선', '밤나무', '꿀벌', '개미굴', '새장', '강아지풀', '소똥구리', '도토리묵'
+            '개구쟁이', '신호등', '알사탕', '벼락치기', '눈꺼풀', '불꽃놀이', '가위바위보', '밥도둑', '소방차', '구급차'
         ],
         '캐릭터/문화': [
             '피카츄', '짱구', '산리오', '하츄핑', '루피', '브레드이발소', '마인크래프트', '로블록스', '스폰지밥', '슈퍼마리오', 
             '아이돌', '마술사', '유튜브', '헤드셋', '게이밍의자', '스파이더맨', '엘사', '아이언맨', '포켓몬볼', '크리에이터', 
-            '버추얼유튜버', '응원봉', '포토카드', '틱톡', '이모티콘', '토토로', '도라에몽', '보노보노', '신비아파트', '핑크퐁', 
-            '아기상어', '뽀로로', '크롱', '타요', '라바', '쿠키런', '몰랑이', '자두', '검정고무신', '미키마우스', 
-            '곰돌이푸', '스누피', '시나모롤', '쿠로미', '마이멜로디', '폼폼푸린', '헬로키티', '배트맨', '캡틴아메리카', '헐크', 
-            '토르', '우디', '버즈', '인사이드아웃', '쿵푸팬더', '미니언즈', '슈렉', '라이온킹', '웹툰', '숏폼', 
-            '챌린지', '굿즈', '콘서트', '팬미팅', '스트리머', '게임패드', 'VR헤드셋', '닌텐도스위치', '플레이스테이션', '카카오프렌즈'
+            '응원봉', '포토카드', '틱톡', '이모티콘', '도라에몽', '신비아파트', '아기상어', '뽀로로', '쿠키런', '시나모롤', 
+            '쿠로미', '마이멜로디', '폼폼푸린', '헬로키티', '배트맨', '캡틴아메리카', '우디', '버즈', '미니언즈', '닌텐도'
         ],
         '스포츠/놀이': [
-            '축구', '농구', '피구', '피구공', '배드민턴', '줄넘기', '인라인스케이트', '보드게임', '숨바꼭질', '무궁화꽃이피었습니다', 
-            '제기차기', '팽이', '롤러스케이트', '수영', '태권도', '양궁', '펜싱', '야구', '볼링', '스케이트보드', 
-            '탁구', '골프', '피겨스케이팅', '씨름', '당구', '배구', '핸드볼', '족구', '테니스', '스쿼시', 
-            '아이스하키', '마라톤', '높이뛰기', '멀리뛰기', '역도', '유도', '검도', '체조', '리듬체조', '스키', 
-            '스노보드', '썰매', '훌라후프', '공기놀이', '딱지치기', '땅따먹기', '실뜨기', '얼음땡', '수건돌리기', '연날리기', 
-            '투호', '윷놀이', '할리갈리', '루미큐브', '부루마블', '체스', '장기', '바둑', '오목', '다트', 
-            '사격', '카누', '조정', '서핑', '클라이밍', '승마', '패러글라이딩', '마술', '퍼즐', '레고'
+            '축구', '농구', '피구', '피구공', '배드민턴', '줄넘기', '인라인스케이트', '보드게임', '숨바꼭질', '제기차기', 
+            '팽이', '수영', '태권도', '양궁', '펜싱', '야구', '볼링', '스케이트보드', '탁구', '골프', 
+            '피겨스케이팅', '씨름', '배구', '테니스', '마라톤', '높이뛰기', '역도', '유도', '검도', '체조', 
+            '썰매', '훌라후프', '공기놀이', '딱지치기', '연날리기', '윷놀이', '체스', '장기', '바둑', '다트'
         ],
         '물건/일상': [
             '스마트폰', '보조배터리', '에어팟', '무선이어폰', '선풍기', '드라이기', '우산', '텀블러', '키링', '슬리퍼', 
             '수건', '청소기', '냉장고', '안경', '손거울', '가방', '텐트', '캐리어', '전등', '시계', 
-            '무드등', '블루투스스피커', '마스크', '손소독제', '충전기', '보온병', '지갑', '소파', '텔레비전', '에어컨', 
-            '세탁기', '건조기', '전자레인지', '에어프라이어', '밥솥', '정수기', '식기세척기', '로봇청소기', '컴퓨터', '모니터', 
-            '키보드', '마우스', '헤드폰', '손톱깎이', '면도기', '칫솔', '치약', '비누', '샴푸', '빗', 
-            '휴지', '물티슈', '침대', '이불', '베개', '옷걸이', '서랍장', '신발장', '우산꽂이', '화분', 
-            '스탠드', '알람시계', '계산기', '도장', '열쇠', '자물쇠', '바구니', '테이프', '머그컵', '냄비', 
-            '프라이팬', '도마', '식칼', '숟가락', '젓가락', '포크', '빨대', '쇼핑백', '배낭', '손난로'
+            '무드등', '블루투스스피커', '마스크', '충전기', '지갑', '소파', '텔레비전', '에어컨', '세탁기', '컴퓨터', 
+            '키보드', '마우스', '헤드폰', '칫솔', '치약', '비누', '샴푸', '휴지', '침대', '이불'
         ],
         '장소/자연/우주': [
             '무인도', '놀이공원', '워터파크', '캠핑장', '남극', '화산', '우주선', '블랙홀', '토성', '유성', 
-            '오로라', '동굴', '사막', '피라미드', '에펠탑', '자유의여신상', '독도', '해수욕장', 'N서울타워', '제주도', 
-            '아쿠아리움', '영화관', '도서관', '미술관', '천문대', '지하실', '백화점', '대형마트', '편의점', '병원', 
-            '약국', '소방서', '경찰서', '우체국', '은행', '공항', '기차역', '버스터미널', '지하철역', '주유소', 
-            '주차장', '공원', '동물원', '식물원', '수목원', '박물관', '유치원', '초등학교', '중학교', '고등학교', 
-            '한라산', '백두산', '지리산', '설악산', '한강', '낙동강', '남해', '동해', '서해', '태양', 
-            '달', '수성', '금성', '지구', '화성', '목성', '천왕성', '해왕성', '은하수', '혜성', 
-            '인공위성', '우주정거장', '우주복', '폭포', '계곡', '호수', '빙하', '연못', '갯벌', '단풍'
+            '오로라', '동굴', '사막', '피라미드', '에펠탑', '해수욕장', 'N서울타워', '제주도', '아쿠아리움', '영화관', 
+            '도서관', '미술관', '백화점', '편의점', '병원', '소방서', '경찰서', '우체국', '은행', '공항', 
+            '기차역', '지하철역', '공원', '동물원', '식물원', '태양', '달', '지구', '화성', '은하수'
         ],
         '직업/사람': [
             '우주비행사', '프로게이머', '웹툰작가', '유튜버', '경찰관', '소방관', '요리사', '탐정', '마술사', '고고학자', 
             '판사', '아이돌', '건축가', '카레이서', '댄서', '과학자', '선생님', '의사', '간호사', '운동선수', 
-            '비행기조종사', '아나운서', '화가', '수의사', '경호원', '변호사', '검사', '외교관', '정치인', '대통령', 
-            '경찰', '형사', '군인', '장군', '해녀', '농부', '어부', '광부', '목수', '배관공', 
-            '전기기사', '정비사', '기자', '사진작가', '영화감독', '배우', '성우', '개그맨', '가수', '작곡가', 
-            '모델', '디자이너', '미용사', '메이크업아티스트', '바리스타', '제과제빵사', '영양사', '사서', '승무원', '안내원', 
-            '회계사', '세무사', '통역사', '번역가', '사회복지사', '사육사', '훈련사', '기상캐스터', '기관사', '택시기사'
+            '비행기조종사', '화가', '수의사', '변호사', '군인', '농부', '어부', '목수', '기자', '사진작가', 
+            '배우', '성우', '개그맨', '가수', '디자이너', '미용사', '바리스타', '제과제빵사', '승무원', '사육사'
         ]
     };
 
     // 화면 전환 함수
     function showScreen(screenId) {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
     }
 
-    // 시간 설정 및 직접 입력 이벤트 처리
+    // 커스텀 모달 알림창
+    function showCustomAlert(title, message, icon = '🔔') {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-message').innerText = message;
+        document.getElementById('modal-icon').innerText = icon;
+        document.getElementById('modal-btn-cancel').classList.add('hidden');
+        
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+        confirmBtn.onclick = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    // 커스텀 확인 창
+    function showCustomConfirm(title, message, onConfirm, icon = '❓') {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-message').innerText = message;
+        document.getElementById('modal-icon').innerText = icon;
+        
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        cancelBtn.classList.remove('hidden');
+        
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+        
+        confirmBtn.onclick = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            if (onConfirm) onConfirm();
+        };
+
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    // 시간 설정 핸들러
     const timeInput = document.getElementById('time-input');
 
     function updateTimePresetHighlight(val) {
@@ -412,6 +540,7 @@
 
     document.querySelectorAll('.time-btn').forEach(btn => {
         btn.addEventListener('click', function() {
+            playSound('pop');
             const val = parseInt(this.getAttribute('data-time'));
             drawingTimeSetting = val;
             if (timeInput) timeInput.value = val;
@@ -431,18 +560,19 @@
         timeInput.addEventListener('change', function() {
             let val = parseInt(this.value);
             if (isNaN(val) || val < 5) val = 5; // 최소 5초
-            if (val > 600) val = 600; // 최대 10분(600초)
+            if (val > 600) val = 600; // 최대 10분
             this.value = val;
             drawingTimeSetting = val;
             updateTimePresetHighlight(val);
         });
     }
 
-    // 카테고리 설정 버튼 이벤트
+    // 카테고리 토글
     function toggleCategory(btn, category) {
+        playSound('pop');
         if (selectedCategories.includes(category)) {
             if (selectedCategories.length <= 1) {
-                alert('최소 1개의 카테고리는 선택해야 합니다!');
+                showCustomAlert('카테고리 선택', '최소 1개의 카테고리는 선택해야 합니다!', '⚠️');
                 return;
             }
             selectedCategories = selectedCategories.filter(c => c !== category);
@@ -462,10 +592,11 @@
         if (name.length === 0) return;
         
         if (players.some(p => p.name === name)) {
-            alert('이미 있는 이름입니다.');
+            showCustomAlert('참가자 등록', '이미 등록된 이름입니다.', '⚠️');
             return;
         }
 
+        playSound('pop');
         players.push({ name: name, score: 0 });
         input.value = '';
         renderPlayerList();
@@ -473,6 +604,7 @@
 
     // 플레이어 삭제
     function removePlayer(index) {
+        playSound('pop');
         players.splice(index, 1);
         renderPlayerList();
     }
@@ -483,10 +615,10 @@
         listDiv.innerHTML = '';
         players.forEach((player, index) => {
             const badge = document.createElement('div');
-            badge.className = 'bg-blue-500 text-white px-3 py-1 rounded-full flex items-center gap-2 shadow-sm text-lg';
+            badge.className = 'bg-blue-500 text-white px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-sm text-lg font-bold animate-fadeIn';
             badge.innerHTML = `
-                ${player.name}
-                <button onclick="removePlayer(${index})" class="text-white hover:text-red-300 font-bold ml-1">&times;</button>
+                <span>${player.name}</span>
+                <button onclick="removePlayer(${index})" class="text-blue-100 hover:text-red-200 font-bold ml-1 text-xl leading-none">&times;</button>
             `;
             listDiv.appendChild(badge);
         });
@@ -508,31 +640,21 @@
     // 게임 시작
     function startGame() {
         if (players.length < 2) {
-            // alert 대신 커스텀 경고창이 좋지만 구현 편의상 모달 대신 화면 텍스트 강조로 변경 가능
-            // 여기서는 단순성을 위해 alert 사용을 지양하라고 했으므로 자체 모달 로직이나 텍스트 변화를 줍니다.
-            const input = document.getElementById('player-input');
-            input.placeholder = "최소 2명이 필요해요!";
-            input.classList.add('border-red-500', 'bg-red-50');
-            setTimeout(() => {
-                input.classList.remove('border-red-500', 'bg-red-50');
-                input.placeholder = "학생 이름 입력";
-            }, 2000);
+            showCustomAlert('시작 불가', '게임 진행을 위해 최소 2명의 참가자를 입력해주세요!', '📢');
             return;
         }
-        
-        // 큐 초기화 (인덱스 배열 섞기)
+        playSound('pop');
         orderQueue = shuffleArray([...Array(players.length).keys()]);
         startNextRound();
     }
 
     // 다음 라운드 준비 (출제자 뽑기 화면)
     function startNextRound() {
-        // 큐가 비었으면 다시 채우기 (모두가 한 번씩 함)
         if (orderQueue.length === 0) {
             orderQueue = shuffleArray([...Array(players.length).keys()]);
         }
         
-        currentDrawerIndex = orderQueue.pop(); // 큐에서 한 명 뽑기
+        currentDrawerIndex = orderQueue.pop(); // 큐에서 출제자 추출
         
         // UI 초기화
         document.getElementById('word-reveal-box').classList.add('hidden');
@@ -540,33 +662,33 @@
         document.getElementById('btn-start-draw').classList.add('hidden');
         const rouletteBox = document.getElementById('roulette-box');
         rouletteBox.innerHTML = '<span class="text-gray-400">? ? ?</span>';
-        rouletteBox.className = 'text-6xl my-10 h-20 flex items-center justify-center'; // 애니메이션 제거
         
         showScreen('screen-picker');
         
-        // 룰렛 애니메이션 (시각적 재미)
+        // 룰렛 연출 효과
         let ticks = 0;
-        const maxTicks = 20; // 약 2초간
+        const maxTicks = 18;
         const interval = setInterval(() => {
+            playSound('tick');
             const randomPlayer = players[Math.floor(Math.random() * players.length)].name;
             rouletteBox.innerHTML = `<span class="text-gray-400">${randomPlayer}</span>`;
             ticks++;
             
             if (ticks >= maxTicks) {
                 clearInterval(interval);
+                playSound('fanfare');
                 const actualDrawerName = players[currentDrawerIndex].name;
                 rouletteBox.innerHTML = `🎉 <span class="roulette-text text-blue-600">${actualDrawerName}</span> 🎉`;
                 
-                // 1초 뒤에 제시어 확인 박스 표시
                 setTimeout(() => {
                     document.getElementById('word-reveal-box').classList.remove('hidden');
                     pickRandomWord();
-                }, 1000);
+                }, 800);
             }
         }, 100);
     }
 
-    // 무작위 제시어 선택
+    // 제시어 무작위 선출
     function pickRandomWord() {
         let availableWords = [];
         selectedCategories.forEach(cat => {
@@ -576,7 +698,7 @@
         });
         
         if (availableWords.length === 0) {
-            currentWord = "에러:단어없음";
+            currentWord = "행복";
         } else {
             const randomIndex = Math.floor(Math.random() * availableWords.length);
             currentWord = availableWords[randomIndex];
@@ -585,14 +707,16 @@
         document.getElementById('the-word').innerText = currentWord;
     }
 
-    // 제시어 보기 버튼 클릭
+    // 제시어 공개 버튼
     function showWord() {
+        playSound('pop');
         document.getElementById('the-word').classList.remove('hidden');
         document.getElementById('btn-start-draw').classList.remove('hidden');
     }
 
     // 드로잉 모드 진입
     function enterDrawMode() {
+        playSound('pop');
         showScreen('screen-draw');
         document.getElementById('draw-current-player').innerText = players[currentDrawerIndex].name;
         document.getElementById('draw-current-word').innerText = currentWord;
@@ -601,15 +725,19 @@
         updateTimerDisplay();
         
         initCanvas();
-        clearCanvas(); // 이전 그림 지우기
+        clearCanvas();
         
-        // 타이머 시작
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timeLeft--;
             updateTimerDisplay();
             
+            if (timeLeft <= 5 && timeLeft > 0) {
+                playSound('alarm');
+            }
+
             if (timeLeft <= 0) {
+                clearInterval(timerInterval);
                 finishDrawing();
             }
         }, 1000);
@@ -617,283 +745,257 @@
 
     function updateTimerDisplay() {
         const timerEl = document.getElementById('timer-display');
-        timerEl.innerText = timeLeft;
-        if (timeLeft <= 10) {
-            timerEl.classList.remove('text-red-500');
-            timerEl.classList.add('text-red-600', 'animate-pulse', 'scale-125', 'transition-transform');
-        } else {
-            timerEl.classList.add('text-red-500');
-            timerEl.classList.remove('text-red-600', 'animate-pulse', 'scale-125', 'transition-transform');
+        if (timerEl) {
+            timerEl.innerText = timeLeft;
+            if (timeLeft <= 10) {
+                timerEl.classList.add('text-red-600', 'animate-ping');
+            } else {
+                timerEl.classList.remove('text-red-600', 'animate-ping');
+            }
         }
     }
 
-    // 캔버스 초기화 및 이벤트 바인딩
+    // 캔버스 초기화 및 픽셀 밀도 조정
     function initCanvas() {
-        if (!canvas) {
-            canvas = document.getElementById('drawing-canvas');
-            ctx = canvas.getContext('2d');
-            
-            // 크기 조정 (부모 div에 맞춤)
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            // 이벤트 리스너 바인딩 (PC)
-            canvas.addEventListener('mousedown', startPosition);
-            canvas.addEventListener('mouseup', endPosition);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseout', endPosition); // 캔버스 밖으로 나가면 그리기 종료
-            
-            // 이벤트 리스너 바인딩 (터치/태블릿)
-            canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
-            canvas.addEventListener('touchend', endPosition);
-            canvas.addEventListener('touchmove', handleTouchMove, {passive: false});
-            canvas.addEventListener('touchcancel', endPosition);
-        }
-    }
-
-    function resizeCanvas() {
+        canvas = document.getElementById('drawing-canvas');
         const container = document.getElementById('canvas-container');
-        // 기존 그림 임시 저장 (리사이즈 시 날아가는 것 방지)
-        let tempCanvas = document.createElement('canvas');
-        let tempCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        if(canvas.width > 0) tempCtx.drawImage(canvas, 0, 0);
-
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-
-        // 배경색 흰색 설정
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // 복원
-        if(canvas.width > 0) ctx.drawImage(tempCanvas, 0, 0);
-        
+        // 컨테이너 크기에 맞춰 캔버스 크기 조정
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        ctx = canvas.getContext('2d');
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 이벤트 리스너 바인딩 (Pointer Events: 터치 & 마우스 공통 대응)
+        canvas.onpointerdown = startDrawing;
+        canvas.onpointermove = draw;
+        canvas.onpointerup = stopDrawing;
+        canvas.onpointercancel = stopDrawing;
     }
 
-    // 그리기 이벤트 핸들러
-    function getPointerPos(e) {
+    function getCanvasCoordinates(e) {
         const rect = canvas.getBoundingClientRect();
-        let clientX = e.clientX;
-        let clientY = e.clientY;
-
-        if (e.touches && e.touches.length > 0) {
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-        }
-
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
         };
     }
 
-    function startPosition(e) {
+    function startDrawing(e) {
         isDrawing = true;
-        const pos = getPointerPos(e);
-        lastX = pos.x;
-        lastY = pos.y;
-        draw(e); // 점 하나만 찍을 때를 위해
-    }
+        const coords = getCanvasCoordinates(e);
+        lastX = coords.x;
+        lastY = coords.y;
 
-    function handleTouchStart(e) {
-        e.preventDefault(); // 스크롤 등 기본 동작 방지
-        startPosition(e);
-    }
-
-    function endPosition() {
-        isDrawing = false;
-        ctx.beginPath(); // 경로 초기화
+        // 점 찍기 대응
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, currentLineWidth / 2, 0, Math.PI * 2);
+        ctx.fillStyle = currentColor;
+        ctx.fill();
     }
 
     function draw(e) {
         if (!isDrawing) return;
-        
-        const pos = getPointerPos(e);
-        
-        ctx.lineWidth = currentLineWidth;
-        ctx.strokeStyle = currentColor;
-        
+        const coords = getCanvasCoordinates(e);
+
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
-        ctx.lineTo(pos.x, pos.y);
+        ctx.lineTo(coords.x, coords.y);
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentLineWidth;
         ctx.stroke();
-        
-        lastX = pos.x;
-        lastY = pos.y;
+
+        lastX = coords.x;
+        lastY = coords.y;
     }
 
-    function handleTouchMove(e) {
-        e.preventDefault(); // 스와이프 방지
-        draw(e);
+    function stopDrawing() {
+        isDrawing = false;
     }
 
     function clearCanvas() {
-        ctx.fillStyle = "white";
+        if (!ctx || !canvas) return;
+        playSound('pop');
+        ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // 도구 버튼 설정 (색상 및 굵기)
-    const customContainer = document.getElementById('custom-color-container');
-    const customPicker = document.getElementById('custom-color-picker');
-
-    function selectCustomColor(color) {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-        if (customContainer) {
-            customContainer.classList.add('selected');
-        }
-        currentColor = color;
-    }
-
+    // 팔레트 색상 클릭 이벤트
     document.querySelectorAll('.color-btn').forEach(btn => {
         btn.addEventListener('click', function() {
+            playSound('pop');
             document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-            if (customContainer) customContainer.classList.remove('selected');
             this.classList.add('selected');
             currentColor = this.getAttribute('data-color');
         });
     });
 
-    // 커스텀 색상 피커 이벤트 (터치 및 클릭 완벽 지원)
+    // 커스텀 컬러 피커
+    const customPicker = document.getElementById('custom-color-picker');
     if (customPicker) {
-        ['input', 'change'].forEach(eventType => {
-            customPicker.addEventListener(eventType, function(e) {
-                selectCustomColor(e.target.value);
-            });
+        customPicker.addEventListener('input', function() {
+            currentColor = this.value;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
         });
     }
 
-    // 굵기 버튼 이벤트
+    // 획 굵기 프리셋 클릭
     document.querySelectorAll('.size-btn').forEach(btn => {
         btn.addEventListener('click', function() {
+            playSound('pop');
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
-            const size = parseInt(this.getAttribute('data-size'));
-            currentLineWidth = size;
+            currentLineWidth = parseInt(this.getAttribute('data-size'));
             
             const slider = document.getElementById('brush-slider');
             const sizeText = document.getElementById('brush-size-text');
-            if (slider) slider.value = size;
-            if (sizeText) sizeText.innerText = size;
+            if (slider) slider.value = currentLineWidth;
+            if (sizeText) sizeText.innerText = currentLineWidth;
         });
     });
 
-    // 굵기 슬라이더 이벤트
+    // 굵기 슬라이더 조절
     const brushSlider = document.getElementById('brush-slider');
-    const sizeText = document.getElementById('brush-size-text');
+    const brushSizeText = document.getElementById('brush-size-text');
     if (brushSlider) {
-        brushSlider.addEventListener('input', function(e) {
-            const size = parseInt(e.target.value);
-            currentLineWidth = size;
-            if (sizeText) sizeText.innerText = size;
+        brushSlider.addEventListener('input', function() {
+            currentLineWidth = parseInt(this.value);
+            if (brushSizeText) brushSizeText.innerText = currentLineWidth;
+            
+            // 프리셋 선택 해제
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
         });
     }
 
-    // 그리기 완료 (또는 시간 초과)
+    // 그림 완료 및 포기
     function finishDrawing() {
-        clearInterval(timerInterval);
-        
-        // 완성된 그림 이미지를 추출하여 감상 화면으로 전달
-        const finalImg = document.getElementById('final-drawing-img');
-        finalImg.src = canvas.toDataURL();
-        
-        // 다 같이 그림을 보는 감상 화면으로 이동
+        if (timerInterval) clearInterval(timerInterval);
+        playSound('fanfare');
+
+        // 완성된 그림을 이미지 데이터로 변환
+        const dataURL = canvas.toDataURL('image/png');
+        document.getElementById('final-drawing-img').src = dataURL;
+
         showScreen('screen-guess');
     }
 
-    // 정답 공개 및 점수 화면으로 이동
+    // 정답 공개 버튼
     function revealAnswer() {
+        playSound('fanfare');
         document.getElementById('score-answer').innerText = currentWord;
         renderScoreList();
         showScreen('screen-score');
     }
 
-    // 점수 입력창 렌더링 (출제자 포함)
+    // 점수 입력 리스트 렌더링
     function renderScoreList() {
-        const listDiv = document.getElementById('score-list');
-        listDiv.innerHTML = '';
-        
-        players.forEach((player, index) => {
-            const isDrawer = (index === currentDrawerIndex);
-            
+        const container = document.getElementById('score-list');
+        container.innerHTML = '';
+
+        players.forEach((player, idx) => {
+            const isDrawer = (idx === currentDrawerIndex);
             const card = document.createElement('div');
-            card.className = `p-3 rounded-xl shadow-sm border-2 flex flex-col items-center gap-2 ${
-                isDrawer ? 'bg-amber-50 border-amber-300' : 'bg-white border-gray-100'
+            card.className = `p-3 rounded-2xl border-2 flex items-center justify-between shadow-sm ${
+                isDrawer ? 'bg-amber-50 border-amber-300' : 'bg-white border-gray-200'
             }`;
+
             card.innerHTML = `
-                <div class="text-xl font-bold text-gray-700 flex items-center gap-1">
-                    ${player.name}
-                    ${isDrawer ? '<span class="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-normal">🎨 출제자</span>' : ''}
+                <div class="flex items-center gap-2">
+                    <span class="text-xl font-bold text-gray-800">${player.name}</span>
+                    ${isDrawer ? '<span class="bg-amber-400 text-white text-xs px-2 py-0.5 rounded-full font-bold">출제자</span>' : ''}
                 </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="changeScore(${index}, -1)" class="w-10 h-10 rounded-full bg-red-100 text-red-600 font-bold text-xl hover:bg-red-200 transition-colors">-</button>
-                    <span id="score-val-${index}" class="text-2xl font-bold w-8 text-center">${player.score}</span>
-                    <button onclick="changeScore(${index}, 1)" class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold text-xl hover:bg-blue-200 transition-colors">+</button>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xl font-bold text-blue-600 mr-2" id="score-val-${idx}">${player.score}점</span>
+                    <button onclick="changeScore(${idx}, 10)" class="btn-bubbly bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-lg text-sm font-bold">+10</button>
+                    <button onclick="changeScore(${idx}, 5)" class="btn-bubbly bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1 rounded-lg text-sm font-bold">+5</button>
+                    <button onclick="changeScore(${idx}, 1)" class="btn-bubbly bg-sky-400 hover:bg-sky-500 text-white px-2 py-1 rounded-lg text-sm font-bold">+1</button>
+                    <button onclick="changeScore(${idx}, -1)" class="btn-bubbly bg-gray-300 hover:bg-gray-400 text-gray-700 px-2 py-1 rounded-lg text-sm font-bold">-1</button>
                 </div>
             `;
-            listDiv.appendChild(card);
+            container.appendChild(card);
         });
     }
 
-    // 점수 변경
-    function changeScore(playerIndex, amount) {
-        players[playerIndex].score += amount;
-        // 점수가 0 밑으로 내려가지 않게 할지 여부 (일단 허용하거나 0 최소값 설정)
-        if (players[playerIndex].score < 0) players[playerIndex].score = 0; 
+    function changeScore(index, delta) {
+        playSound('pop');
+        players[index].score += delta;
+        if (players[index].score < 0) players[index].score = 0;
         
-        document.getElementById(`score-val-${playerIndex}`).innerText = players[playerIndex].score;
+        const scoreEl = document.getElementById(`score-val-${index}`);
+        if (scoreEl) scoreEl.innerText = `${players[index].score}점`;
     }
 
-    // 리더보드 (순위표) 보기
+    // 리더보드 표시
     function showLeaderboard() {
+        playSound('pop');
         const listDiv = document.getElementById('leaderboard-list');
         listDiv.innerHTML = '';
-        
-        // 점수 기준 내림차순 정렬
-        const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-        
-        const medals = ['🥇', '🥈', '🥉'];
-        
-        sortedPlayers.forEach((player, idx) => {
-            let rankIcon = '';
-            if (idx < 3) rankIcon = medals[idx];
-            else rankIcon = `<span class="text-gray-400 text-lg w-6 inline-block text-center">${idx + 1}</span>`;
-            
+
+        // 점수 내림차순 정렬
+        const sorted = [...players].sort((a, b) => b.score - a.score);
+
+        sorted.forEach((player, idx) => {
+            let medal = '🏅';
+            if (idx === 0) medal = '🥇';
+            else if (idx === 1) medal = '🥈';
+            else if (idx === 2) medal = '🥉';
+
             const item = document.createElement('div');
-            item.className = 'flex justify-between items-center p-4 bg-gray-50 rounded-2xl border border-gray-200 shadow-sm';
+            item.className = 'flex justify-between items-center bg-purple-50 p-3.5 rounded-2xl border-2 border-purple-200 text-xl font-bold shadow-sm';
             item.innerHTML = `
-                <div class="flex items-center gap-4">
-                    <div class="text-3xl">${rankIcon}</div>
-                    <div class="text-2xl font-bold text-gray-700">${player.name}</div>
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">${medal}</span>
+                    <span class="text-gray-800">${idx + 1}위: ${player.name}</span>
                 </div>
-                <div class="text-3xl font-bold text-purple-600">${player.score}<span class="text-lg text-gray-500 ml-1">점</span></div>
+                <span class="text-purple-700 text-2xl font-bold">${player.score}점</span>
             `;
             listDiv.appendChild(item);
         });
 
         showScreen('screen-leaderboard');
-        
-        // 게임 완전 종료 상태인지 체크하여 '돌아가기' 버튼 조절
-        // 여기서는 언제든 볼 수 있으므로 둡니다.
     }
 
     function backToScore() {
+        playSound('pop');
         showScreen('screen-score');
     }
 
-    // 게임 완전히 끝내기 (초기화)
     function confirmEndGame() {
-        // 커스텀 다이얼로그나 2번 묻기 대신 바로 초기화로 갑니다.
-        players = [];
-        orderQueue = [];
-        renderPlayerList();
-        showScreen('screen-setup');
+        showCustomConfirm(
+            '게임 종료', 
+            '게임을 완전히 종료하고 처음 설정 화면으로 돌아갈까요?', 
+            () => {
+                playSound('pop');
+                players = [];
+                renderPlayerList();
+                showScreen('screen-setup');
+            },
+            '🏁'
+        );
     }
 
+    // 창 크기 변경 대응 (화면 회전 시 그림 보존)
+    window.addEventListener('resize', () => {
+        if (document.getElementById('screen-draw').classList.contains('active')) {
+            // 기존 그림 데이터 임시 저장
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(canvas, 0, 0);
+
+            // 캔버스 크기 재조정
+            initCanvas();
+
+            // 저장된 그림 복원
+            ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, canvas.width, canvas.height);
+        }
+    });
 </script>
 </body>
 </html>

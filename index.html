@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <style>
+        /* */
         body {
             font-family: 'Jua', sans-serif;
             background-color: #fdfbf7;
@@ -377,7 +378,6 @@
                 osc.start(now);
                 osc.stop(now + 0.08);
             } else if (type === 'fanfare') {
-                // 승리/공개 효과음
                 const notes = [261.63, 329.63, 392.00, 523.25];
                 notes.forEach((freq, idx) => {
                     const o = audioCtx.createOscillator();
@@ -404,70 +404,70 @@
             // 사운드 재생 불가 환경 예외 처리
         }
     }
-
-    // 제시어 데이터베이스 (카테고리별 대량 수록)
+    // 제시어 데이터베이스 (카테고리별 정확히 50개씩 초등 6학년 수준 맞춤 수록)
     const wordDB = {
         '동물/생물': [
             '호랑이', '사자', '코끼리', '기린', '원숭이', '강아지', '고양이', '토끼', '돼지', '소', 
             '말', '양', '쥐', '뱀', '닭', '오리', '독수리', '비둘기', '펭귄', '악어', 
-            '거북이', '개구리', '달팽이', '거미', '개미', '나비', '벌', '물고기', '상어', '고래', 
-            '문어', '오징어', '꽃게', '카피바라', '수달', '카멜레온', '티라노사우루스', '플라밍고', '햄스터', '타조', 
-            '해파리', '도마뱀', '가오리', '사막여우', '펠리컨', '알파카', '고슴도치', '장수풍뎅이', '사슴벌레', '부엉이', 
-            '바다표범', '북극곰', '아홀로틀', '치타', '캥거루', '하마', '코뿔소', '얼룩말', '너구리', '판다', 
-            '레서판다', '나무늘보', '두더지', '미어캣', '늑대', '여우', '공작', '조개', 
-            '해마', '킹크랩', '모기', '매미', '잠자리', '무당벌레', '전갈', '지렁이', '족제비', '비버'
+            '거북이', '개구리', '달팽이', '거미', '개미', '나비', '꿀벌', '돌고래', '상어', '고래', 
+            '문어', '오징어', '꽃게', '수달', '카멜레온', '티라노사우루스', '플라밍고', '햄스터', '타조', '해파리', 
+            '도마뱀', '가오리', '사막여우', '알파카', '고슴도치', '장수풍뎅이', '부엉이', '바다표범', '북극곰', '판다'
         ],
         '음식/디저트': [
             '사과', '바나나', '포도', '딸기', '수박', '귤', '복숭아', '파인애플', '토마토', '감자', 
             '고구마', '라면', '떡볶이', '김밥', '피자', '햄버거', '치킨', '돈까스', '짜장면', '탕수육', 
-            '초콜릿', '사탕', '아이스크림', '케이크', '탕후루', '마라탕', '민트초코', '크로플', '버블티', '소금빵', 
-            '마카롱', '핫도그', '삼겹살', '타코야끼', '붕어빵', '계란빵', '오므라이스', '파스타', '시리얼', '샤인머스캣', 
-            '솜사탕', '호떡', '팥빙수', '감자튀김', '만두', '약과', '마시멜로', '시카고피자', '치즈스틱', '순대', 
-            '어묵', '짬뽕', '우동', '샌드위치', '토스트', '크루아상', '에그타르트', '푸딩', '젤리', '팝콘'
+            '초콜릿', '사탕', '아이스크림', '케이크', '탕후루', '마라탕', '삼각김밥', '버블티', '소금빵', '마카롱', 
+            '핫도그', '삼겹살', '타코야끼', '붕어빵', '계란빵', '오므라이스', '파스타', '시리얼', '솜사탕', '호떡', 
+            '팥빙수', '감자튀김', '만두', '약과', '마시멜로', '순대', '어묵', '짬뽕', '샌드위치', '에그타르트'
         ],
         '학교/교과': [
             '삼각자', '분도기', '리코더', '현미경', '지구본', '실로폰', '돋보기', '급식표', '책상', '보드마카', 
-            '알림장', '현장학습', '체육대회', '단소', '소반', '나침반', '강당', '청소도구', '실내화', '운동장', 
-            '주번', '칠판지우개', '실험관', '해부도', '광합성', '먹이사슬', '지진계', '각도기', '전자저울', 
-            '시험지', '교과서', '칠판', '분필', '연필', '지우개', '필통', '샤프', '볼펜', 
-            '형광펜', '자', '딱풀', '가위', '색종이', '스케치북', '크레파스', '물감', '붓', '오카리나', 
-            '소고', '장구', '꽹과리', '보건실', '도서관', '과학실', '미술실', '음악실', '급식실', '체육복'
+            '알림장', '현장학습', '체육대회', '단소', '나침반', '실내화', '운동장', '칠판지우개', '지진계', '각도기', 
+            '전자저울', '시험지', '교과서', '칠판', '연필', '지우개', '필통', '샤프', '형광펜', '자', 
+            '딱풀', '가위', '색종이', '스케치북', '크레파스', '물감', '붓', '소고', '장구', '보건실', 
+            '도서관', '과학실', '미술실', '음악실', '급식실', '체육복', '실습실', '수채화', '현수막', '시간표'
         ],
         '💡 넌센스/말장난': [
             '사과나무', '눈사람', '오리발', '불고기', '꽃다발', '징검다리', '손전등', '촛불', '비행기', '달걀후라이', 
             '바람개비', '무지개', '모래시계', '해바라기', '손목시계', '붕어빵', '감자칩', '발자국', '파도타기', '파리채', 
-            '신발장', '돌고래', '밤하늘', '달팽이', '칼국수', '호랑나비', '고추잠자리', '손가락', '왕관', '소나무', 
-            '개구쟁이', '신호등', '알사탕', '벼락치기', '눈꺼풀', '불꽃놀이', '가위바위보', '밥도둑', '소방차', '구급차'
+            '신발장', '밤하늘', '칼국수', '호랑나비', '고추잠자리', '손가락', '왕관', '소나무', '개구쟁이', '신호등', 
+            '알사탕', '벼락치기', '눈꺼풀', '불꽃놀이', '가위바위보', '밥도둑', '소방차', '구급차', '알람시계', '물총', 
+            '팽이', '전기밥솥', '쥐불놀이', '기름종이', '돌다리', '꿀벌', '물개', '알파카', '콩나물', '모기장'
         ],
         '캐릭터/문화': [
             '피카츄', '짱구', '산리오', '하츄핑', '루피', '브레드이발소', '마인크래프트', '로블록스', '스폰지밥', '슈퍼마리오', 
             '아이돌', '마술사', '유튜브', '헤드셋', '게이밍의자', '스파이더맨', '엘사', '아이언맨', '포켓몬볼', '크리에이터', 
             '응원봉', '포토카드', '틱톡', '이모티콘', '도라에몽', '신비아파트', '아기상어', '뽀로로', '쿠키런', '시나모롤', 
-            '쿠로미', '마이멜로디', '폼폼푸린', '헬로키티', '배트맨', '캡틴아메리카', '우디', '버즈', '미니언즈', '닌텐도'
+            '쿠로미', '마이멜로디', '폼폼푸린', '헬로키티', '배트맨', '캡틴아메리카', '우디', '버즈', '미니언즈', '닌텐도', 
+            '보컬로이드', '웹툰', '숏폼', '웹소설', '게임패드', '피규어', '굿즈', '버츄얼유튜버', '코스프레', '팬미팅'
         ],
         '스포츠/놀이': [
             '축구', '농구', '피구', '피구공', '배드민턴', '줄넘기', '인라인스케이트', '보드게임', '숨바꼭질', '제기차기', 
             '팽이', '수영', '태권도', '양궁', '펜싱', '야구', '볼링', '스케이트보드', '탁구', '골프', 
             '피겨스케이팅', '씨름', '배구', '테니스', '마라톤', '높이뛰기', '역도', '유도', '검도', '체조', 
-            '썰매', '훌라후프', '공기놀이', '딱지치기', '연날리기', '윷놀이', '체스', '장기', '바둑', '다트'
+            '썰매', '훌라후프', '공기놀이', '딱지치기', '연날리기', '윷놀이', '체스', '장기', '바둑', '다트', 
+            '무궁화꽃이피었습니다', '얼음땡', '자전거', '클라이밍', '서핑', '스키', '스노보드', '족구', '풋살', '패러글라이딩'
         ],
         '물건/일상': [
-            '스마트폰', '보조배터리', '에어팟', '무선이어폰', '선풍기', '드라이기', '우산', '텀블러', '키링', '슬리퍼', 
-            '수건', '청소기', '냉장고', '안경', '손거울', '가방', '텐트', '캐리어', '전등', '시계', 
-            '무드등', '블루투스스피커', '마스크', '충전기', '지갑', '소파', '텔레비전', '에어컨', '세탁기', '컴퓨터', 
-            '키보드', '마우스', '헤드폰', '칫솔', '치약', '비누', '샴푸', '휴지', '침대', '이불'
+            '스마트폰', '보조배터리', '무선이어폰', '선풍기', '드라이기', '우산', '텀블러', '키링', '슬리퍼', '수건', 
+            '청소기', '냉장고', '안경', '손거울', '가방', '텐트', '캐리어', '전등', '시계', '무드등', 
+            '블루투스스피커', '마스크', '충전기', '지갑', '소파', '텔레비전', '에어컨', '세탁기', '컴퓨터', '키보드', 
+            '마우스', '헤드폰', '칫솔', '치약', '비누', '샴푸', '휴지', '침대', '이불', '베개', 
+            '손톱깎이', '머리끈', '빗', '빗자루', '쓰레기통', '옷걸이', '전자레인지', '식기세척기', '정수기', '체중계'
         ],
         '장소/자연/우주': [
             '무인도', '놀이공원', '워터파크', '캠핑장', '남극', '화산', '우주선', '블랙홀', '토성', '유성', 
             '오로라', '동굴', '사막', '피라미드', '에펠탑', '해수욕장', 'N서울타워', '제주도', '아쿠아리움', '영화관', 
             '도서관', '미술관', '백화점', '편의점', '병원', '소방서', '경찰서', '우체국', '은행', '공항', 
-            '기차역', '지하철역', '공원', '동물원', '식물원', '태양', '달', '지구', '화성', '은하수'
+            '기차역', '지하철역', '공원', '동물원', '식물원', '태양', '달', '지구', '화성', '은하수', 
+            '폭포', '계곡', '빙하', '산맥', '등대', '항구', '한옥마을', '천문대', '경기장', '방송국'
         ],
         '직업/사람': [
             '우주비행사', '프로게이머', '웹툰작가', '유튜버', '경찰관', '소방관', '요리사', '탐정', '마술사', '고고학자', 
             '판사', '아이돌', '건축가', '카레이서', '댄서', '과학자', '선생님', '의사', '간호사', '운동선수', 
             '비행기조종사', '화가', '수의사', '변호사', '군인', '농부', '어부', '목수', '기자', '사진작가', 
-            '배우', '성우', '개그맨', '가수', '디자이너', '미용사', '바리스타', '제과제빵사', '승무원', '사육사'
+            '배우', '성우', '개그맨', '가수', '디자이너', '미용사', '바리스타', '제과제빵사', '승무원', '사육사', 
+            '기상캐스터', '통역사', '프로그래머', '경호원', '펀드매니저', '운동트레이너', '기관사', '세무사', '한의사', '아나운서'
         ]
     };
 
@@ -576,23 +576,25 @@
                 return;
             }
             selectedCategories = selectedCategories.filter(c => c !== category);
-            btn.classList.remove('bg-purple-100', 'text-purple-700', 'border-purple-400', 'font-bold');
-            btn.classList.add('bg-gray-200', 'text-gray-700', 'border-transparent');
+            btn.classList.remove('bg-purple-100', 'text-purple-700', 'border-purple-400');
+            btn.classList.add('bg-gray-100', 'text-gray-400', 'border-gray-200');
         } else {
             selectedCategories.push(category);
-            btn.classList.remove('bg-gray-200', 'text-gray-700', 'border-transparent');
-            btn.classList.add('bg-purple-100', 'text-purple-700', 'border-purple-400', 'font-bold');
+            btn.classList.remove('bg-gray-100', 'text-gray-400', 'border-gray-200');
+            btn.classList.add('bg-purple-100', 'text-purple-700', 'border-purple-400');
         }
     }
 
-    // 플레이어 추가
+    // 참가자 관리
     function addPlayer() {
         const input = document.getElementById('player-input');
         const name = input.value.trim();
-        if (name.length === 0) return;
-        
+        if (!name) {
+            showCustomAlert('이름 입력', '학생 이름을 입력해 주세요.', '⚠️');
+            return;
+        }
         if (players.some(p => p.name === name)) {
-            showCustomAlert('참가자 등록', '이미 등록된 이름입니다.', '⚠️');
+            showCustomAlert('중복 이름', '이미 등록된 학생 이름입니다.', '⚠️');
             return;
         }
 
@@ -600,144 +602,155 @@
         players.push({ name: name, score: 0 });
         input.value = '';
         renderPlayerList();
+        input.focus();
     }
 
-    // 플레이어 삭제
-    function removePlayer(index) {
+    function removePlayer(name) {
         playSound('pop');
-        players.splice(index, 1);
+        players = players.filter(p => p.name !== name);
         renderPlayerList();
     }
 
-    // 플레이어 목록 UI 업데이트
     function renderPlayerList() {
-        const listDiv = document.getElementById('player-list');
-        listDiv.innerHTML = '';
-        players.forEach((player, index) => {
+        const container = document.getElementById('player-list');
+        container.innerHTML = '';
+        if (players.length === 0) {
+            container.innerHTML = '<span class="text-gray-400 text-sm italic m-auto">학생 이름을 추가하면 여기에 표시됩니다.</span>';
+            return;
+        }
+        players.forEach(p => {
             const badge = document.createElement('div');
-            badge.className = 'bg-blue-500 text-white px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-sm text-lg font-bold animate-fadeIn';
+            badge.className = 'bg-blue-100 text-blue-800 px-3 py-1.5 rounded-xl flex items-center gap-2 text-lg border border-blue-300 shadow-sm animate-fade-in';
             badge.innerHTML = `
-                <span>${player.name}</span>
-                <button onclick="removePlayer(${index})" class="text-blue-100 hover:text-red-200 font-bold ml-1 text-xl leading-none">&times;</button>
+                <span>${p.name}</span>
+                <button onclick="removePlayer('${p.name}')" class="text-red-500 hover:text-red-700 font-bold ml-1 text-sm bg-blue-200 hover:bg-red-100 w-5 h-5 rounded-full flex items-center justify-center">✕</button>
             `;
-            listDiv.appendChild(badge);
+            container.appendChild(badge);
         });
     }
 
-    // 배열 섞기 (피셔-예이츠 알고리즘)
+    // 배열 셔플 (Fisher-Yates)
     function shuffleArray(array) {
-        let curId = array.length;
-        while (0 !== curId) {
-            let randId = Math.floor(Math.random() * curId);
-            curId -= 1;
-            let tmp = array[curId];
-            array[curId] = array[randId];
-            array[randId] = tmp;
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        return array;
+        return arr;
     }
 
     // 게임 시작
     function startGame() {
         if (players.length < 2) {
-            showCustomAlert('시작 불가', '게임 진행을 위해 최소 2명의 참가자를 입력해주세요!', '📢');
+            showCustomAlert('참가자 부족', '게임 진행을 위해 최소 2명의 참가자가 필요합니다!', '👥');
             return;
         }
-        playSound('pop');
-        orderQueue = shuffleArray([...Array(players.length).keys()]);
+
+        playSound('fanfare');
+        // 순서 큐 생성 (인덱스 배열)
+        orderQueue = shuffleArray(players.map((_, idx) => idx));
         startNextRound();
     }
 
-    // 다음 라운드 준비 (출제자 뽑기 화면)
+    // 다음 라운드 준비 및 출제자 뽑기 룰렛
     function startNextRound() {
         if (orderQueue.length === 0) {
-            orderQueue = shuffleArray([...Array(players.length).keys()]);
+            // 한 바퀴 모두 끝났을 경우 다시 셔플
+            orderQueue = shuffleArray(players.map((_, idx) => idx));
         }
-        
-        currentDrawerIndex = orderQueue.pop(); // 큐에서 출제자 추출
-        
-        // UI 초기화
-        document.getElementById('word-reveal-box').classList.add('hidden');
-        document.getElementById('the-word').classList.add('hidden');
-        document.getElementById('btn-start-draw').classList.add('hidden');
-        const rouletteBox = document.getElementById('roulette-box');
-        rouletteBox.innerHTML = '<span class="text-gray-400">? ? ?</span>';
-        
-        showScreen('screen-picker');
-        
-        // 룰렛 연출 효과
-        let ticks = 0;
-        const maxTicks = 18;
-        const interval = setInterval(() => {
-            playSound('tick');
-            const randomPlayer = players[Math.floor(Math.random() * players.length)].name;
-            rouletteBox.innerHTML = `<span class="text-gray-400">${randomPlayer}</span>`;
-            ticks++;
-            
-            if (ticks >= maxTicks) {
-                clearInterval(interval);
-                playSound('fanfare');
-                const actualDrawerName = players[currentDrawerIndex].name;
-                rouletteBox.innerHTML = `🎉 <span class="roulette-text text-blue-600">${actualDrawerName}</span> 🎉`;
-                
-                setTimeout(() => {
-                    document.getElementById('word-reveal-box').classList.remove('hidden');
-                    pickRandomWord();
-                }, 800);
-            }
-        }, 100);
-    }
 
-    // 제시어 무작위 선출
-    function pickRandomWord() {
-        let availableWords = [];
+        currentDrawerIndex = orderQueue.pop();
+        const drawerName = players[currentDrawerIndex].name;
+
+        // 선택된 카테고리에서 무작위 단어 추출
+        const availableWords = [];
         selectedCategories.forEach(cat => {
-            if(wordDB[cat]) {
-                availableWords = availableWords.concat(wordDB[cat]);
+            if (wordDB[cat]) {
+                availableWords.push(...wordDB[cat]);
             }
         });
-        
+
         if (availableWords.length === 0) {
-            currentWord = "행복";
+            currentWord = "수박";
         } else {
-            const randomIndex = Math.floor(Math.random() * availableWords.length);
-            currentWord = availableWords[randomIndex];
+            currentWord = availableWords[Math.floor(Math.random() * availableWords.length)];
         }
-        
-        document.getElementById('the-word').innerText = currentWord;
+
+        // 룰렛 화면 초기화
+        showScreen('screen-picker');
+        const rouletteBox = document.getElementById('roulette-box');
+        const wordRevealBox = document.getElementById('word-reveal-box');
+        const theWord = document.getElementById('the-word');
+        const btnStartDraw = document.getElementById('btn-start-draw');
+
+        wordRevealBox.classList.add('hidden');
+        theWord.classList.add('hidden');
+        btnStartDraw.classList.add('hidden');
+        rouletteBox.innerText = "???";
+
+        // 룰렛 애니메이션
+        let speed = 50;
+        let counter = 0;
+        let totalAnimSteps = 25;
+
+        function spin() {
+            playSound('tick');
+            const randomName = players[Math.floor(Math.random() * players.length)].name;
+            rouletteBox.innerText = randomName;
+            rouletteBox.classList.add('roulette-text');
+
+            counter++;
+            if (counter < totalAnimSteps) {
+                setTimeout(spin, speed + counter * 10);
+            } else {
+                rouletteBox.innerText = `🎯 ${drawerName}`;
+                rouletteBox.classList.remove('roulette-text');
+                playSound('fanfare');
+                wordRevealBox.classList.remove('hidden');
+                wordRevealBox.classList.add('flex');
+            }
+        }
+        spin();
     }
 
-    // 제시어 공개 버튼
     function showWord() {
         playSound('pop');
-        document.getElementById('the-word').classList.remove('hidden');
-        document.getElementById('btn-start-draw').classList.remove('hidden');
+        const theWord = document.getElementById('the-word');
+        const btnStartDraw = document.getElementById('btn-start-draw');
+        theWord.innerText = `제시어: ${currentWord}`;
+        theWord.classList.remove('hidden');
+        btnStartDraw.classList.remove('hidden');
     }
 
-    // 드로잉 모드 진입
+    // 그림 그리기 모드 진입
     function enterDrawMode() {
         playSound('pop');
         showScreen('screen-draw');
+
         document.getElementById('draw-current-player').innerText = players[currentDrawerIndex].name;
         document.getElementById('draw-current-word').innerText = currentWord;
-        
-        timeLeft = drawingTimeSetting;
-        updateTimerDisplay();
-        
+
+        // 캔버스 초기화 및 크기 설정
         initCanvas();
         clearCanvas();
+
+        // 타이머 시작
+        timeLeft = drawingTimeSetting;
+        updateTimerDisplay();
         
         if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timeLeft--;
             updateTimerDisplay();
-            
+
             if (timeLeft <= 5 && timeLeft > 0) {
-                playSound('alarm');
+                playSound('tick');
             }
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
+                playSound('alarm');
+                showCustomAlert('시간 종료', '그림 그리기 시간이 끝났습니다!', '⏰');
                 finishDrawing();
             }
         }, 1000);
@@ -755,53 +768,74 @@
         }
     }
 
-    // 캔버스 초기화 및 픽셀 밀도 조정
+    // 캔버스 로직
     function initCanvas() {
         canvas = document.getElementById('drawing-canvas');
-        const container = document.getElementById('canvas-container');
-        
-        // 컨테이너 크기에 맞춰 캔버스 크기 조정
-        const rect = container.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-
         ctx = canvas.getContext('2d');
+
+        const container = document.getElementById('canvas-container');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentLineWidth;
 
-        // 이벤트 리스너 바인딩 (Pointer Events: 터치 & 마우스 공통 대응)
-        canvas.onpointerdown = startDrawing;
-        canvas.onpointermove = draw;
-        canvas.onpointerup = stopDrawing;
-        canvas.onpointercancel = stopDrawing;
+        // 이벤트 리스너 바인딩 (중복 방지)
+        canvas.removeEventListener('mousedown', startDrawing);
+        canvas.removeEventListener('mousemove', draw);
+        canvas.removeEventListener('mouseup', stopDrawing);
+        canvas.removeEventListener('mouseleave', stopDrawing);
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+
+        // 터치 이벤트
+        canvas.removeEventListener('touchstart', handleTouchStart);
+        canvas.removeEventListener('touchmove', handleTouchMove);
+        canvas.removeEventListener('touchend', stopDrawing);
+
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
     }
 
-    function getCanvasCoordinates(e) {
+    function getCanvasCoords(e) {
         const rect = canvas.getBoundingClientRect();
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+
         return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+            x: (clientX - rect.left) * (canvas.width / rect.width),
+            y: (clientY - rect.top) * (canvas.height / rect.height)
         };
     }
 
     function startDrawing(e) {
         isDrawing = true;
-        const coords = getCanvasCoordinates(e);
+        const coords = getCanvasCoords(e);
         lastX = coords.x;
         lastY = coords.y;
 
-        // 점 찍기 대응
         ctx.beginPath();
-        ctx.arc(lastX, lastY, currentLineWidth / 2, 0, Math.PI * 2);
-        ctx.fillStyle = currentColor;
-        ctx.fill();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(lastX, lastY);
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentLineWidth;
+        ctx.stroke();
     }
 
     function draw(e) {
         if (!isDrawing) return;
-        const coords = getCanvasCoordinates(e);
+        const coords = getCanvasCoords(e);
 
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
@@ -818,14 +852,23 @@
         isDrawing = false;
     }
 
+    function handleTouchStart(e) {
+        e.preventDefault();
+        startDrawing(e);
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+        draw(e);
+    }
+
     function clearCanvas() {
-        if (!ctx || !canvas) return;
-        playSound('pop');
+        if (!ctx) return;
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // 팔레트 색상 클릭 이벤트
+    // 색상선택 제어
     document.querySelectorAll('.color-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             playSound('pop');
@@ -836,123 +879,130 @@
     });
 
     // 커스텀 컬러 피커
-    const customPicker = document.getElementById('custom-color-picker');
-    if (customPicker) {
-        customPicker.addEventListener('input', function() {
+    const customColorPicker = document.getElementById('custom-color-picker');
+    if (customColorPicker) {
+        customColorPicker.addEventListener('input', function() {
             currentColor = this.value;
             document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
         });
     }
 
-    // 획 굵기 프리셋 클릭
-    document.querySelectorAll('.size-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            playSound('pop');
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            currentLineWidth = parseInt(this.getAttribute('data-size'));
-            
-            const slider = document.getElementById('brush-slider');
-            const sizeText = document.getElementById('brush-size-text');
-            if (slider) slider.value = currentLineWidth;
-            if (sizeText) sizeText.innerText = currentLineWidth;
-        });
-    });
-
-    // 굵기 슬라이더 조절
+    // 굵기 제어
     const brushSlider = document.getElementById('brush-slider');
-    const brushSizeText = document.getElementById('brush-size-text');
-    if (brushSlider) {
-        brushSlider.addEventListener('input', function() {
-            currentLineWidth = parseInt(this.value);
-            if (brushSizeText) brushSizeText.innerText = currentLineWidth;
-            
-            // 프리셋 선택 해제
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+
+    function updateSizeHighlight(size) {
+        document.querySelectorAll('.size-btn').forEach(b => {
+            if (parseInt(b.getAttribute('data-size')) === size) {
+                b.classList.add('selected');
+            } else {
+                b.classList.remove('selected');
+            }
         });
     }
 
-    // 그림 완료 및 포기
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            playSound('pop');
+            const size = parseInt(this.getAttribute('data-size'));
+            currentLineWidth = size;
+            if (brushSlider) brushSlider.value = size;
+            updateSizeHighlight(size);
+        });
+    });
+
+    if (brushSlider) {
+        brushSlider.addEventListener('input', function() {
+            const size = parseInt(this.value);
+            currentLineWidth = size;
+            updateSizeHighlight(size);
+        });
+    }
+
+    // 그림 완료 후 맞히기 화면으로 이동
     function finishDrawing() {
         if (timerInterval) clearInterval(timerInterval);
-        playSound('fanfare');
+        playSound('pop');
 
-        // 완성된 그림을 이미지 데이터로 변환
-        const dataURL = canvas.toDataURL('image/png');
-        document.getElementById('final-drawing-img').src = dataURL;
+        // 완성된 그림을 이미지로 변환하여 렌더링
+        const imgEl = document.getElementById('final-drawing-img');
+        imgEl.src = canvas.toDataURL('image/png');
 
         showScreen('screen-guess');
     }
 
-    // 정답 공개 버튼
+    // 정답 공개 및 점수 주기
     function revealAnswer() {
         playSound('fanfare');
         document.getElementById('score-answer').innerText = currentWord;
-        renderScoreList();
-        showScreen('screen-score');
-    }
 
-    // 점수 입력 리스트 렌더링
-    function renderScoreList() {
+        // 플레이어 점수 부여 리스트 생성
         const container = document.getElementById('score-list');
         container.innerHTML = '';
 
-        players.forEach((player, idx) => {
-            const isDrawer = (idx === currentDrawerIndex);
-            const card = document.createElement('div');
-            card.className = `p-3 rounded-2xl border-2 flex items-center justify-between shadow-sm ${
-                isDrawer ? 'bg-amber-50 border-amber-300' : 'bg-white border-gray-200'
-            }`;
-
-            card.innerHTML = `
+        players.forEach((p, idx) => {
+            const isDrawer = idx === currentDrawerIndex;
+            const item = document.createElement('div');
+            item.className = `p-3 rounded-xl flex items-center justify-between border-2 ${isDrawer ? 'bg-yellow-50 border-yellow-300' : 'bg-white border-gray-200'} shadow-sm`;
+            
+            item.innerHTML = `
                 <div class="flex items-center gap-2">
-                    <span class="text-xl font-bold text-gray-800">${player.name}</span>
-                    ${isDrawer ? '<span class="bg-amber-400 text-white text-xs px-2 py-0.5 rounded-full font-bold">출제자</span>' : ''}
+                    <span class="text-xl font-bold ${isDrawer ? 'text-amber-600' : 'text-gray-800'}">${p.name}</span>
+                    ${isDrawer ? '<span class="bg-yellow-200 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-bold">🎨 출제자</span>' : ''}
+                    <span class="text-sm text-gray-500 font-bold ml-1">(현재: ${p.score}점)</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="changeScore(${idx}, -1)" class="btn-bubbly bg-red-500 hover:bg-red-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xl sm:text-2xl font-bold flex items-center justify-center leading-none shadow-sm pb-1">-</button>
-                    <span class="text-xl sm:text-2xl font-bold text-blue-600 w-12 sm:w-16 text-center" id="score-val-${idx}">${player.score}점</span>
-                    <button onclick="changeScore(${idx}, 1)" class="btn-bubbly bg-blue-500 hover:bg-blue-600 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xl sm:text-2xl font-bold flex items-center justify-center leading-none shadow-sm pb-1">+</button>
+                <div class="flex items-center gap-1">
+                    <button onclick="changeScore(${idx}, 100)" class="btn-bubbly bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-lg text-base font-bold shadow">+100</button>
+                    <button onclick="changeScore(${idx}, 50)" class="btn-bubbly bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1 rounded-lg text-base font-bold shadow">+50</button>
+                    <button onclick="changeScore(${idx}, 10)" class="btn-bubbly bg-purple-500 hover:bg-purple-600 text-white px-2.5 py-1 rounded-lg text-base font-bold shadow">+10</button>
+                    <button onclick="changeScore(${idx}, -10)" class="btn-bubbly bg-gray-400 hover:bg-gray-500 text-white px-2.5 py-1 rounded-lg text-base font-bold shadow">-10</button>
                 </div>
             `;
-            container.appendChild(card);
+            container.appendChild(item);
         });
+
+        showScreen('screen-score');
     }
 
-    function changeScore(index, delta) {
+    function changeScore(playerIdx, delta) {
         playSound('pop');
-        players[index].score += delta;
-        if (players[index].score < 0) players[index].score = 0;
-        
-        const scoreEl = document.getElementById(`score-val-${index}`);
-        if (scoreEl) scoreEl.innerText = `${players[index].score}점`;
+        players[playerIdx].score += delta;
+        revealAnswer(); // 리스트 갱신
     }
 
-    // 리더보드 표시
+    // 명예의 전당 (순위표)
     function showLeaderboard() {
         playSound('pop');
-        const listDiv = document.getElementById('leaderboard-list');
-        listDiv.innerHTML = '';
+        const container = document.getElementById('leaderboard-list');
+        container.innerHTML = '';
 
         // 점수 내림차순 정렬
         const sorted = [...players].sort((a, b) => b.score - a.score);
 
-        sorted.forEach((player, idx) => {
+        sorted.forEach((p, rank) => {
             let medal = '🏅';
-            if (idx === 0) medal = '🥇';
-            else if (idx === 1) medal = '🥈';
-            else if (idx === 2) medal = '🥉';
+            let bgClass = 'bg-gray-50 border-gray-200';
+
+            if (rank === 0) {
+                medal = '🥇';
+                bgClass = 'bg-yellow-100 border-yellow-400 text-yellow-900';
+            } else if (rank === 1) {
+                medal = '🥈';
+                bgClass = 'bg-slate-100 border-slate-300 text-slate-800';
+            } else if (rank === 2) {
+                medal = '🥉';
+                bgClass = 'bg-amber-100 border-amber-300 text-amber-900';
+            }
 
             const item = document.createElement('div');
-            item.className = 'flex justify-between items-center bg-purple-50 p-3.5 rounded-2xl border-2 border-purple-200 text-xl font-bold shadow-sm';
+            item.className = `p-3 sm:p-4 rounded-2xl flex items-center justify-between border-2 ${bgClass} shadow-md`;
             item.innerHTML = `
                 <div class="flex items-center gap-3">
-                    <span class="text-2xl">${medal}</span>
-                    <span class="text-gray-800">${idx + 1}위: ${player.name}</span>
+                    <span class="text-2xl sm:text-3xl">${medal}</span>
+                    <span class="text-xl sm:text-2xl font-bold">${p.name}</span>
                 </div>
-                <span class="text-purple-700 text-2xl font-bold">${player.score}점</span>
+                <span class="text-2xl sm:text-3xl font-extrabold">${p.score}점</span>
             `;
-            listDiv.appendChild(item);
+            container.appendChild(item);
         });
 
         showScreen('screen-leaderboard');
@@ -965,35 +1015,37 @@
 
     function confirmEndGame() {
         showCustomConfirm(
-            '게임 종료', 
-            '게임을 완전히 종료하고 처음 설정 화면으로 돌아갈까요?', 
+            '게임 종료',
+            '정말로 게임을 종료하고 처음 화면으로 돌아가시겠습니까? 점수가 초기화됩니다.',
             () => {
                 playSound('pop');
-                players = [];
-                renderPlayerList();
+                players.forEach(p => p.score = 0);
                 showScreen('screen-setup');
             },
-            '🏁'
+            '🚨'
         );
     }
 
-    // 창 크기 변경 대응 (화면 회전 시 그림 보존)
+    // 화면 크기 변경 시 캔버스 반응형 리사이즈 대응
     window.addEventListener('resize', () => {
-        if (document.getElementById('screen-draw').classList.contains('active')) {
-            // 기존 그림 데이터 임시 저장
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCtx.drawImage(canvas, 0, 0);
-
-            // 캔버스 크기 재조정
-            initCanvas();
-
-            // 저장된 그림 복원
-            ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, canvas.width, canvas.height);
+        const activeScreen = document.querySelector('.screen.active');
+        if (activeScreen && activeScreen.id === 'screen-draw' && canvas) {
+            const temp = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const container = document.getElementById('canvas-container');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.putImageData(temp, 0, 0);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
         }
     });
+
+    // 초기화 및 로드 시 기본 탭 가이던스
+    window.onload = function() {
+        renderPlayerList();
+    };
 </script>
 </body>
 </html>

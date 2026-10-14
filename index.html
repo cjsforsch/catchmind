@@ -324,6 +324,8 @@
     let orderQueue = []; // 출제자 순서를 위한 큐 (랜덤 섞기)
     let currentDrawerIndex = -1;
     let currentWord = "";
+    // 현재 게임에서 이미 사용한 제시어 기록
+    let usedWords = new Set();
     
     // 타이머 및 캔버스 관련
     let timerInterval = null;
@@ -646,6 +648,9 @@
             return;
         }
 
+        // 새 게임을 시작하면 제시어 중복 기록 초기화
+        usedWords.clear();
+
         playSound('fanfare');
         // 순서 큐 생성 (인덱스 배열)
         orderQueue = shuffleArray(players.map((_, idx) => idx));
@@ -670,10 +675,22 @@
             }
         });
 
-        if (availableWords.length === 0) {
+        // 중복 단어를 제거하고, 이미 사용한 제시어는 후보에서 제외
+        let unusedWords = [...new Set(availableWords)].filter(
+            word => !usedWords.has(word)
+        );
+
+        // 선택한 카테고리의 제시어를 모두 사용했다면 기록을 초기화
+        if (unusedWords.length === 0 && availableWords.length > 0) {
+            usedWords.clear();
+            unusedWords = [...new Set(availableWords)];
+        }
+
+        if (unusedWords.length === 0) {
             currentWord = "수박";
         } else {
-            currentWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+            currentWord = unusedWords[Math.floor(Math.random() * unusedWords.length)];
+            usedWords.add(currentWord);
         }
 
         // 룰렛 화면 초기화
